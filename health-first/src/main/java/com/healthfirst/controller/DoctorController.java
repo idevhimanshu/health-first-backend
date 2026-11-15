@@ -26,30 +26,34 @@ public class DoctorController {
 	private DoctorRepository doctorRepository;
 
 	@PostMapping("/doctor-profile")
-	public DoctorEntity createDoctorProfile(@AuthenticationPrincipal UserDetails userDetails, @RequestBody DoctorProfileRequest request) {
-		System.out.println(request);
-	 UserEntity user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
-	 if (user.getRole() != "DOCTOR") {
-		throw new RuntimeException("only doctor can create doctor profile");
+	public DoctorEntity createDoctorProfile(@AuthenticationPrincipal UserDetails userDetails,
+			@RequestBody DoctorProfileRequest request) {
+
+		UserEntity user = userRepository.findByEmail(userDetails.getUsername())
+				.orElseThrow(() -> new RuntimeException("User not found"));
+
+		if (!"DOCTOR".equals(user.getRole())) {
+			throw new RuntimeException("Only doctor can create doctor profile");
+		}
+
+		if (doctorRepository.existsByUser_Id(user.getId())) {
+			throw new RuntimeException("Doctor profile already created");
+		}
+
+		DoctorEntity doctor = new DoctorEntity();
+
+		doctor.setUser(user);
+		doctor.setSpecialization(request.getSpecialization());
+		doctor.setQualification(request.getQualification());
+		doctor.setLicenseNumber(request.getLicenseNumber());
+		doctor.setExperienceyear(request.getExperienceyear());
+		doctor.setConsultantFee(request.getConsultantFee());
+		doctor.setHospitalName(request.getHospitalName());
+		doctor.setAddress(request.getAddress());
+		doctor.setCity(request.getCity());
+		doctor.setBio(request.getBio());
+
+		return doctorRepository.save(doctor);
 	}
-	 if (doctorRepository.existsByUser_Id(user.getId())) {
-		throw new RuntimeException("Doctor profile already created");
-		
-	}
-	 
-	 DoctorEntity doctor = new DoctorEntity();
-	 doctor.setUser(user);
-	 doctor.setSpecialization(request.getSpecialization());
-	    doctor.setQualification(request.getQualification());
-	    doctor.setLicenseNumber(request.getLicenseNumber());
-	    doctor.setExperienceyear(request.getExperienceyear());
-	    doctor.setConsultantFee(request.getConsultantFee());
-	    doctor.setHospitalName(request.getHospitalName());
-	    doctor.setAddress(request.getAddress());
-	    doctor.setCity(request.getCity());
-	    doctor.setBio(request.getBio());
-	    System.out.println(request);
-	    System.out.println(doctor);
-	 return doctorRepository.save(doctor);
-	}
+
 }
