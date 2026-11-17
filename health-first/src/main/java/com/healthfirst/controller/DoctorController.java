@@ -1,8 +1,11 @@
 package com.healthfirst.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +16,7 @@ import com.healthfirst.entity.DoctorEntity;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.repository.DoctorRepository;
 import com.healthfirst.repository.UserRepository;
+import com.healthfirst.service.DoctorService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -24,6 +28,9 @@ public class DoctorController {
 	private UserRepository userRepository;
 	@Autowired
 	private DoctorRepository doctorRepository;
+	
+	@Autowired
+	private DoctorService doctorService;
 
 	@PostMapping("/doctor-profile")
 	public DoctorEntity createDoctorProfile(@AuthenticationPrincipal UserDetails userDetails,
@@ -54,6 +61,11 @@ public class DoctorController {
 		doctor.setBio(request.getBio());
 
 		return doctorRepository.save(doctor);
+	}
+	
+	@GetMapping("/doctors")
+	public List<DoctorEntity> getDoctorList() {
+		return doctorService.getAllDoctorList();
 	}
 
 }
