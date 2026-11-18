@@ -26,103 +26,88 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest; 
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 @Service
 public class UserService {
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private S3Presigner s3Presigner;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private S3Client s3Client;
-	
+
 	@Value("${aws.s3.bucket-name}")
 	private String bucketName;
-	
-	  
-	
+
 	private final Path uploadDir = Paths.get("uploads");
-	
+
 	public ApiResponse<UserEntity> updateProfile(String email, UpdateProfileRequestDto request) {
-		UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User name not found" + email));
-		if (request.getName() != null) userEntity.setName(request.getName());
-		if (request.getMobileNumber() != null) userEntity.setMobileNumber(request.getMobileNumber());
-		
+		UserEntity userEntity = userRepository.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("User name not found" + email));
+		if (request.getName() != null)
+			userEntity.setName(request.getName());
+		if (request.getMobileNumber() != null)
+			userEntity.setMobileNumber(request.getMobileNumber());
+
 		return new ApiResponse<UserEntity>(true, "Profile updated successfully", userRepository.save(userEntity));
 	}
 
 	public ApiResponse<UserEntity> updatePassword(String username, ChangePasswordRequestDto request) {
 		// TODO Auto-generated method stub
-		UserEntity userEntity = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User name not found" + username));
-		if (passwordEncoder.matches(request.getCurrentPassword(),userEntity.getPassword())) {
+		UserEntity userEntity = userRepository.findByEmail(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User name not found" + username));
+		if (passwordEncoder.matches(request.getCurrentPassword(), userEntity.getPassword())) {
 			userEntity.setPassword(passwordEncoder.encode(request.getNewPassword()));
 			return new ApiResponse<UserEntity>(true, "Password has been changed", userRepository.save(userEntity));
 		} else {
-		 throw new RuntimeException("Password is not correct.");
+			throw new RuntimeException("Password is not correct.");
 		}
 	}
-	
 
-public String uploadImage(String path, MultipartFile file)
-        throws IOException {
+	public String uploadImage(String path, MultipartFile file) throws IOException {
 
-    String originalFilename = file.getOriginalFilename();
+		String originalFilename = file.getOriginalFilename();
 
-    if (file.isEmpty() || originalFilename == null
-            || originalFilename.isBlank()) {
-        throw new IllegalArgumentException("Please upload a valid image");
-    }
+		if (file.isEmpty() || originalFilename == null || originalFilename.isBlank()) {
+			throw new IllegalArgumentException("Please upload a valid image");
+		}
 
-    String extension = "";
-    int dotIndex = originalFilename.lastIndexOf(".");
+		String extension = "";
+		int dotIndex = originalFilename.lastIndexOf(".");
 
-    if (dotIndex >= 0) {
-        extension = originalFilename.substring(dotIndex);
-    }
+		if (dotIndex >= 0) {
+			extension = originalFilename.substring(dotIndex);
+		}
 
-    String newFileName = UUID.randomUUID() + extension;
+		String newFileName = UUID.randomUUID() + extension;
 
-    String filePath = path + "/" + newFileName;
+		String filePath = path + "/" + newFileName;
 
-    PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-            .bucket(bucketName)
-            .key(filePath)
-            .contentType(file.getContentType())
-            .build();
+		PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(filePath)
+				.contentType(file.getContentType()).build();
 
-    s3Client.putObject(
-            putObjectRequest,
-            RequestBody.fromBytes(file.getBytes())
-    );
+		s3Client.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
 
-    return newFileName;
-}
-
-	
-	public String getPresigner (String objectKey) {
-		GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-				.bucket(bucketName)
-				.key(objectKey)
-				.build();
-		
-		GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
-				.signatureDuration(Duration.ofHours(1))
-				.getObjectRequest(getObjectRequest)
-				.build();
-		
-		PresignedGetObjectRequest presignedGetObjectRequest = s3Presigner.presignGetObject(getObjectPresignRequest);
-		
-		return presignedGetObjectRequest.url().toString();
-		
+		return newFileName;
 	}
-	
-	
+
+	public String getPresigner(String objectKey) {
+		GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(objectKey).build();
+
+		GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
+				.signatureDuration(Duration.ofHours(1)).getObjectRequest(getObjectRequest).build();
+
+		PresignedGetObjectRequest presignedGetObjectRequest = s3Presigner.presignGetObject(getObjectPresignRequest);
+
+		return presignedGetObjectRequest.url().toString();
+
+	}
 
 }

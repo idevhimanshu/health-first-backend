@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.healthfirst.dto.ApiResponse;
 import com.healthfirst.dto.DoctorProfileRequest;
 import com.healthfirst.entity.DoctorEntity;
 import com.healthfirst.entity.UserEntity;
@@ -64,7 +65,7 @@ public class DoctorController {
 	}
 	
 	@GetMapping("/doctors")
-	public List<DoctorEntity> getDoctorList() {
+	public ApiResponse<List<DoctorEntity>> getDoctorList() {
 		return doctorService.getAllDoctorList();
 	}
 
