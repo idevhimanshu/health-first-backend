@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.healthfirst.dto.ApiResponse;
@@ -25,6 +26,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping("api/doctor")
 @SecurityRequirement(name = "bearerAuth")
 public class DoctorController {
+	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -67,6 +69,11 @@ public class DoctorController {
 	@GetMapping("/doctors")
 	public ApiResponse<List<DoctorEntity>> getDoctorList() {
 		return doctorService.getAllDoctorList();
+	}
+	
+	@GetMapping("/search")
+	public ApiResponse<List<DoctorEntity>> search(@RequestParam String name){
+		return doctorService.search(name);
 	}
 
 }
