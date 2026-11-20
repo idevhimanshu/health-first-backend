@@ -58,6 +58,10 @@ public class JwtService {
 
 	}
 	
+	public Date getExpirationTime(String token) {
+		return extractAllClaims(token).getExpiration();
+	}
+	
 	
 	// Generate jwt token
 	public String genrateJwtToken(UserEntity user) {

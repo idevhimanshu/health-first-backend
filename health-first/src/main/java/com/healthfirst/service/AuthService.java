@@ -1,6 +1,7 @@
 package com.healthfirst.service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -18,6 +19,7 @@ import com.healthfirst.entity.UsersPrincipal;
 import com.healthfirst.repository.RefreshTokenRepository;
 import com.healthfirst.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,6 +30,7 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final JwtService jwtService;
 	private final RefreshTokenRepository refreshTokenRepository;
+	private final TokenBlacklistService tokenBlacklistService;
 
 	public ApiResponse<LoginResponseDto> login(LoginRequestDto request, String role) {
 
@@ -43,9 +46,16 @@ public class AuthService {
 		return buildResponse(userEntity);
 	}
 	
-	public void logout(String refreshToken) {
-	 refreshTokenRepository.findByToken(refreshToken).ifPresent(t -> { t.setRevoked(true); refreshTokenRepository.save(t); });
-	 
+	@Transactional
+	public void logout(String refreshToken, String accessToken) {
+	RefreshTokenEntity entity =	refreshTokenRepository.findByToken(refreshToken).orElseThrow(() -> new RuntimeException("Given token wrong"));
+	entity.setRevoked(true);
+	if (accessToken != null) {
+		Date expiration = jwtService.getExpirationTime(accessToken);
+		long remainingTime = expiration.getTime() - System.currentTimeMillis();
+		tokenBlacklistService.blackListToken(accessToken, remainingTime);
+	}
+	refreshTokenRepository.save(entity);
 	}
 	
 	

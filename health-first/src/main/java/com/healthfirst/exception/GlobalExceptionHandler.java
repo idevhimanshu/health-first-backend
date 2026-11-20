@@ -11,11 +11,11 @@ import com.healthfirst.dto.ApiResponse;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
-//	@ExceptionHandler(RuntimeException.class)
-//	public ResponseEntity<ApiResponse<Void>> handleRunTimeExeption(Exception exception) {
-//		return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error(exception.getMessage()));
-//		
-//	}
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<ApiResponse<Void>> handleRunTimeExeption(Exception exception) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error(exception.getMessage()));
+		
+	}
 	
 	@ExceptionHandler(ResourceAlreadyExitisException.class)
 	public ResponseEntity<ApiResponse<Void>> handleResourceAlreadyExitisException(Exception exception){
