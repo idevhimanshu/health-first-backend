@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.healthfirst.dto.ApiResponse;
 import com.healthfirst.dto.LoginRequestDto;
@@ -21,8 +23,9 @@ import com.healthfirst.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("api/auth")
 public class DoctorAuthController {
 	
 	private final AuthService authService;
