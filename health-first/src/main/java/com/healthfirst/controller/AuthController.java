@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.healthfirst.dto.ApiResponse;
 import com.healthfirst.dto.LoginRequestDto;
 import com.healthfirst.dto.LoginResponseDto;
+import com.healthfirst.dto.RefreshTokenDto;
 import com.healthfirst.dto.SignupRequestDto;
 import com.healthfirst.dto.SignupResponse;
 import com.healthfirst.entity.UserEntity;
@@ -98,8 +99,10 @@ public class AuthController {
 	}
 	
 	@PostMapping("doctor/logout")
-	public void doctorLogout(@RequestBody String refreshToken) {
-		authService.logout(refreshToken);
+	public void doctorLogout(@RequestBody RefreshTokenDto refreshToken) {
+		authService.logout(refreshToken.getToken());
 	}
+	
+	
 	
 }
