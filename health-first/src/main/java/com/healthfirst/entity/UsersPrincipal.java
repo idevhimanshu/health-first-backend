@@ -2,6 +2,7 @@ package com.healthfirst.entity;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsersPrincipal implements UserDetails {
+	
 	@Autowired
 	private UserEntity userEntity;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return Collections.singleton(new SimpleGrantedAuthority("USER"));
+		return List.of(new SimpleGrantedAuthority("Role_" + userEntity.getRole().toUpperCase()));
 	}
 
 	@Override
@@ -38,6 +40,12 @@ public class UsersPrincipal implements UserDetails {
 	public String getUsername() {
 		// TODO Auto-generated method stub
 		return userEntity.getEmail();
+	}
+	
+	public UserEntity getUser() {
+		// TODO Auto-generated method stub
+		return this.userEntity;
+
 	}
 
 }

@@ -14,7 +14,10 @@ public class LoginResponseDto {
 	private long id;
 	private String name;
 	private String email;
-	private String password;
 	private String mobileNumber;
-	private String token;
+	private String accessToken;
+	private String refreshToken;
+	private String tokenType;
+	private String role;
+	
 }

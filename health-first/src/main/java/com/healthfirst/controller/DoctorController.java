@@ -3,6 +3,7 @@ package com.healthfirst.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,11 +67,13 @@ public class DoctorController {
 		return doctorRepository.save(doctor);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/doctors")
 	public ApiResponse<List<DoctorEntity>> getDoctorList() {
 		return doctorService.getAllDoctorList();
 	}
 	
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/search")
 	public ApiResponse<List<DoctorEntity>> search(@RequestParam String name){
 		return doctorService.search(name);
