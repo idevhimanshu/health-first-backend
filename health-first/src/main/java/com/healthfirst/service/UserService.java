@@ -14,9 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.healthfirst.dto.ApiResponse;
-import com.healthfirst.dto.ChangePasswordRequestDto;
-import com.healthfirst.dto.UpdateProfileRequestDto;
+import com.healthfirst.dto.requests.ChangePasswordRequestDto;
+import com.healthfirst.dto.requests.UpdateProfileRequestDto;
+import com.healthfirst.dto.responses.ApiResponse;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.repository.UserRepository;
 

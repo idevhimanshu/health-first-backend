@@ -1,4 +1,4 @@
-package com.healthfirst.dto;
+package com.healthfirst.dto.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class DoctorProfileRequest {
+public class DoctorProfileRequestDto {
 	
 	@Schema(example = "Cardiology")
 	private String specialization;

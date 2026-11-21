@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.healthfirst.dto.ApiResponse;
-import com.healthfirst.dto.LoginRequestDto;
-import com.healthfirst.dto.LoginResponseDto;
-import com.healthfirst.dto.RefreshTokenRequestDto;
-import com.healthfirst.dto.SignupRequestDto;
-import com.healthfirst.dto.SignupResponse;
+import com.healthfirst.dto.requests.LoginRequestDto;
+import com.healthfirst.dto.requests.RefreshTokenRequestDto;
+import com.healthfirst.dto.requests.SignupRequestDto;
+import com.healthfirst.dto.responses.ApiResponse;
+import com.healthfirst.dto.responses.LoginResponseDto;
+import com.healthfirst.dto.responses.SignupResponseDto;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.exception.ResourceAlreadyExitisException;
 import com.healthfirst.repository.UserRepository;
@@ -33,7 +33,7 @@ public class DoctorAuthController {
 	private final PasswordEncoder passwordEncoder;
 	
 	@PostMapping("doctor/signup")
-	public ApiResponse<SignupResponse> doctorSignup(@RequestBody SignupRequestDto request) {
+	public ApiResponse<SignupResponseDto> doctorSignup(@RequestBody SignupRequestDto request) {
 	Optional<UserEntity> optionalUser =	userRepository.findByEmail(request.getEmail());
 	if (optionalUser.isPresent()) {
 		throw new ResourceAlreadyExitisException("This email is already register with us.");
@@ -45,12 +45,12 @@ public class DoctorAuthController {
 	entity.setName(request.getName());
 	entity.setRole("ROLE_DOCTOR");
 	UserEntity saveUser = userRepository.save(entity);
-	SignupResponse response = new SignupResponse();
+	SignupResponseDto response = new SignupResponseDto();
 	response.setEmail(saveUser.getEmail());
 	response.setId(saveUser.getId());
 	response.setMobileNumber(saveUser.getMobileNumber());
 	response.setName(saveUser.getName());
-	return new ApiResponse<SignupResponse>(true, "Account is created successfully", response);
+	return new ApiResponse<SignupResponseDto>(true, "Account is created successfully", response);
 	}
 	
 	

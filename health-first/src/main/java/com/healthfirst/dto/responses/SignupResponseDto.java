@@ -1,4 +1,4 @@
-package com.healthfirst.dto;
+package com.healthfirst.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupResponse {
+public class SignupResponseDto {
 	
 	private Long id;
 	private String name;

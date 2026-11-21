@@ -1,4 +1,4 @@
-package com.healthfirst.dto;
+package com.healthfirst.dto.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequestDto {
+public class SignupRequestDto {
+	
+	@Schema(example = "Rahul Sharma")
+	private String name;
+	
+	@Schema(example = "9264578124")
+	private String mobileNumber;
 	
 	@Schema(example = "rahuldoctor@gmail.com")
 	private String email;

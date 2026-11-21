@@ -11,10 +11,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.healthfirst.dto.ApiResponse;
-import com.healthfirst.dto.LoginRequestDto;
-import com.healthfirst.dto.LoginResponseDto;
-import com.healthfirst.dto.RefreshTokenResponseDto;
+import com.healthfirst.dto.requests.LoginRequestDto;
+import com.healthfirst.dto.responses.ApiResponse;
+import com.healthfirst.dto.responses.LoginResponseDto;
+import com.healthfirst.dto.responses.RefreshTokenResponseDto;
 import com.healthfirst.entity.RefreshTokenEntity;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.entity.UsersPrincipal;
@@ -84,7 +84,6 @@ public class AuthService {
 		response.setTokenType("Bearer");
 		response.setAccessToken(accessToken);
 		response.setRefreshToken(refreshToken);
-
 		return ApiResponse.success("Login Successfull.", response);
 
 	}

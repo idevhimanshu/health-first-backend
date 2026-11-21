@@ -1,4 +1,4 @@
-package com.healthfirst.dto;
+package com.healthfirst.dto.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

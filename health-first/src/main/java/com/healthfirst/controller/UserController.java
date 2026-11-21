@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.healthfirst.dto.ApiResponse;
-import com.healthfirst.dto.ChangePasswordRequestDto;
-import com.healthfirst.dto.UpdateProfileRequestDto;
+import com.healthfirst.dto.requests.ChangePasswordRequestDto;
+import com.healthfirst.dto.requests.UpdateProfileRequestDto;
+import com.healthfirst.dto.responses.ApiResponse;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.service.UserService;
 import org.springframework.http.MediaType;

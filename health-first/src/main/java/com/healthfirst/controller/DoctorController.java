@@ -12,70 +12,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.healthfirst.dto.ApiResponse;
-import com.healthfirst.dto.DoctorProfileRequest;
+import com.healthfirst.dto.requests.DoctorProfileRequestDto;
+import com.healthfirst.dto.responses.ApiResponse;
+import com.healthfirst.dto.responses.DoctorProfileResponseDto;
+import com.healthfirst.dto.responses.DoctorSummaryDto;
 import com.healthfirst.entity.DoctorEntity;
-import com.healthfirst.entity.UserEntity;
-import com.healthfirst.repository.DoctorRepository;
-import com.healthfirst.repository.UserRepository;
 import com.healthfirst.service.DoctorService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/doctor")
 @SecurityRequirement(name = "bearerAuth")
 public class DoctorController {
 	
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private DoctorRepository doctorRepository;
 	
-	@Autowired
-	private DoctorService doctorService;
+	private final DoctorService doctorService;
 
 	@PostMapping("/doctor-profile")
-	public DoctorEntity createDoctorProfile(@AuthenticationPrincipal UserDetails userDetails,
-			@RequestBody DoctorProfileRequest request) {
+	@PreAuthorize("hasRole(ROLE_DOCTOR")
+	public ApiResponse<DoctorProfileResponseDto> createDoctorProfile(@AuthenticationPrincipal UserDetails userDetails,
+			@RequestBody DoctorProfileRequestDto request) {
 
-		UserEntity user = userRepository.findByEmail(userDetails.getUsername())
-				.orElseThrow(() -> new RuntimeException("User not found"));
-
-		if (!"DOCTOR".equals(user.getRole())) {
-			throw new RuntimeException("Only doctor can create doctor profile");
-		}
-
-		if (doctorRepository.existsByUser_Id(user.getId())) {
-			throw new RuntimeException("Doctor profile already created");
-		}
-
-		DoctorEntity doctor = new DoctorEntity();
-
-		doctor.setUser(user);
-		doctor.setSpecialization(request.getSpecialization());
-		doctor.setQualification(request.getQualification());
-		doctor.setLicenseNumber(request.getLicenseNumber());
-		doctor.setExperienceyear(request.getExperienceyear());
-		doctor.setConsultantFee(request.getConsultantFee());
-		doctor.setHospitalName(request.getHospitalName());
-		doctor.setAddress(request.getAddress());
-		doctor.setCity(request.getCity());
-		doctor.setBio(request.getBio());
-
-		return doctorRepository.save(doctor);
+		return doctorService.createDoctorProfile(userDetails, request);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/doctors")
-	public ApiResponse<List<DoctorEntity>> getDoctorList() {
+	public ApiResponse<List<DoctorSummaryDto>> getDoctorList() {
 		return doctorService.getAllDoctorList();
 	}
 	
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/search")
-	public ApiResponse<List<DoctorEntity>> search(@RequestParam String name){
+	public ApiResponse<List<DoctorEntity>> search(@RequestParam(value = "specializaiton", required = false) String name){
 		return doctorService.search(name);
 	}
 
