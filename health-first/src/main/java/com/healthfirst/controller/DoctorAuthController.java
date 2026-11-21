@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.healthfirst.dto.ApiResponse;
 import com.healthfirst.dto.LoginRequestDto;
 import com.healthfirst.dto.LoginResponseDto;
-import com.healthfirst.dto.RefreshTokenDto;
+import com.healthfirst.dto.RefreshTokenRequestDto;
 import com.healthfirst.dto.SignupRequestDto;
 import com.healthfirst.dto.SignupResponse;
 import com.healthfirst.entity.UserEntity;
@@ -61,12 +61,8 @@ public class DoctorAuthController {
 	}
 	
 	@PostMapping("doctor/logout")
-	public void doctorLogout(@RequestHeader("Authorization") String authHeader, @RequestBody RefreshTokenDto refreshToken) {
-		String accessToken = null;
-		if(authHeader != null && authHeader.startsWith("Bearer ")) {
-			accessToken = authHeader.substring(7);
-		}
-		authService.logout(refreshToken.getToken(), accessToken);
+	public void doctorLogout(@RequestBody RefreshTokenRequestDto refreshToken) {
+		authService.logout(refreshToken.getToken());
 	}
 	
 

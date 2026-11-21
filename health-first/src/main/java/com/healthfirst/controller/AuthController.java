@@ -1,5 +1,6 @@
 package com.healthfirst.controller;
 
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.healthfirst.dto.ApiResponse;
 import com.healthfirst.dto.LoginRequestDto;
 import com.healthfirst.dto.LoginResponseDto;
-import com.healthfirst.dto.RefreshTokenDto;
+import com.healthfirst.dto.RefreshTokenRequestDto;
+import com.healthfirst.dto.RefreshTokenResponseDto;
 import com.healthfirst.dto.SignupRequestDto;
 import com.healthfirst.dto.SignupResponse;
 import com.healthfirst.entity.UserEntity;
@@ -59,12 +61,14 @@ public class AuthController {
 	}
 	
 	@PostMapping("patient/logout")
-	public void doctorLogout(@RequestHeader("Authorization") String authHeader, @RequestBody RefreshTokenDto refreshToken) {
-		String accessToken = null;
-		if(authHeader != null && authHeader.startsWith("Bearer ")) {
-			accessToken = authHeader.substring(7);
-		}
-		authService.logout(refreshToken.getToken(), accessToken);
+	public ApiResponse<Void> doctorLogout(@RequestBody RefreshTokenRequestDto refreshToken) {
+		return authService.logout(refreshToken.getToken());
+	}
+	
+	
+	@PostMapping("/refresh")
+	public ApiResponse<RefreshTokenResponseDto> refresh(@RequestBody RefreshTokenRequestDto refreshToken){
+		return authService.refresh(refreshToken.getToken());
 	}
 	
 

@@ -24,7 +24,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
 	private final JwtService jwtService;
 	private final CustomUserDetailService customUserDetailService;
-	private final TokenBlacklistService tokenBlacklistService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -42,12 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			username = jwtService.extractUsername(token);
 			role = jwtService.extractRole(token);
 			userId = jwtService.extractUserId(token);
-			
-			if(tokenBlacklistService.isTokenBlacklisted(token)) {
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.getWriter().write("token is invalidiate, please login again");
-				return;
-			}
 		}
 
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
