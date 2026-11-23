@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.healthfirst.dto.requests.ChangePasswordRequestDto;
 import com.healthfirst.dto.requests.UpdateProfileRequestDto;
 import com.healthfirst.dto.responses.ApiResponse;
+import com.healthfirst.dto.responses.UserDetailsDto;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.repository.UserRepository;
 
@@ -47,6 +50,13 @@ public class UserService {
 	private String bucketName;
 
 	private final Path uploadDir = Paths.get("uploads");
+	
+	public ApiResponse<UserDetailsDto> getUserDetails(Long id){
+		UserEntity userEntity = userRepository.findById(id)
+				.orElseThrow(() -> new UsernameNotFoundException("User name not found" + id));
+		UserDetailsDto dtoResponse = new	UserDetailsDto(userEntity.getId(), userEntity.getName(), userEntity.getGender());
+		return ApiResponse.success("Success", dtoResponse);
+	}
 	
 	
 

@@ -5,8 +5,10 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.healthfirst.dto.requests.ChangePasswordRequestDto;
 import com.healthfirst.dto.requests.UpdateProfileRequestDto;
 import com.healthfirst.dto.responses.ApiResponse;
+import com.healthfirst.dto.responses.UserDetailsDto;
 import com.healthfirst.entity.UserEntity;
 import com.healthfirst.service.UserService;
 import org.springframework.http.MediaType;
@@ -34,6 +37,11 @@ public class UserController {
 	@Value("${project.image}")
 	private String path;
 	
+	@GetMapping("/profile")
+	public ApiResponse<UserDetailsDto> getUserDetails(@AuthenticationPrincipal Long userId) {
+	    // Pass the Long userId directly to your service (e.g., findById(userId))
+	    return userService.getUserDetails(userId); 
+	}
 	
 	@PutMapping("/profile")
 	public ApiResponse<UserEntity> updateProfile(@RequestBody UpdateProfileRequestDto request, @AuthenticationPrincipal UserDetails userDetails) {
