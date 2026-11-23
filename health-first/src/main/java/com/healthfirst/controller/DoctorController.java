@@ -47,7 +47,7 @@ public class DoctorController {
 	
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@GetMapping("/search")
-	public ApiResponse<List<DoctorEntity>> search(@RequestParam(value = "specializaiton", required = false) String name){
+	public ApiResponse<List<DoctorSummaryDto>> search(@RequestParam(value = "specializaiton", required = false) String name){
 		return doctorService.search(name);
 	}
 

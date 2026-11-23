@@ -35,10 +35,13 @@ public class DoctorService {
 		return ApiResponse.success("Success", dtoList);
 	}
 
-	public ApiResponse<List<DoctorEntity>> search(String name) {
+	public ApiResponse<List<DoctorSummaryDto>> search(String name) {
 		List<DoctorEntity> doctorList = doctorRepository
 				.findBySpecializationContainingIgnoreCaseOrHospitalNameContainingIgnoreCase(name, name);
-		return ApiResponse.success("Success", doctorList);
+		List<DoctorSummaryDto> dtoList = doctorList.stream()
+				.map(doctor ->  new DoctorSummaryDto(doctor.getUser().getName(), doctor.getUser().getGender(), doctor.getUser().getImage(), doctor.getSpecialization(), 0, 0, false))
+				.toList();
+		return ApiResponse.success("Success", dtoList);
 	}
 
 	public ApiResponse<DoctorProfileResponseDto> createDoctorProfile(UserDetails user,
