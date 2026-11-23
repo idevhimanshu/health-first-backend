@@ -30,7 +30,7 @@ public class DoctorService {
 	public ApiResponse<List<DoctorSummaryDto>> getAllDoctorList() {
 		List<DoctorEntity> doctorList = doctorRepository.findAll();
 		List<DoctorSummaryDto> dtoList = doctorList.stream()
-				.map(doctor ->  new DoctorSummaryDto(doctor.getUser().getName(), doctor.getUser().getGender(), doctor.getUser().getImage(), doctor.getSpecialization(), 0, 0, false))
+				.map(doctor ->  new DoctorSummaryDto(doctor.getId(), doctor.getUser().getName(), doctor.getUser().getGender(), doctor.getUser().getImage(), doctor.getSpecialization(), 0, 0, false))
 				.toList();
 		return ApiResponse.success("Success", dtoList);
 	}
@@ -39,7 +39,7 @@ public class DoctorService {
 		List<DoctorEntity> doctorList = doctorRepository
 				.findBySpecializationContainingIgnoreCaseOrHospitalNameContainingIgnoreCase(name, name);
 		List<DoctorSummaryDto> dtoList = doctorList.stream()
-				.map(doctor ->  new DoctorSummaryDto(doctor.getUser().getName(), doctor.getUser().getGender(), doctor.getUser().getImage(), doctor.getSpecialization(), 0, 0, false))
+				.map(doctor ->  new DoctorSummaryDto(doctor.getId(), doctor.getUser().getName(), doctor.getUser().getGender(), doctor.getUser().getImage(), doctor.getSpecialization(), 0, 0, false))
 				.toList();
 		return ApiResponse.success("Success", dtoList);
 	}

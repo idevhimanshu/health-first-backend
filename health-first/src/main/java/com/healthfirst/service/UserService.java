@@ -47,6 +47,8 @@ public class UserService {
 	private String bucketName;
 
 	private final Path uploadDir = Paths.get("uploads");
+	
+	
 
 	public ApiResponse<UserEntity> updateProfile(String email, UpdateProfileRequestDto request) {
 		UserEntity userEntity = userRepository.findByEmail(email)

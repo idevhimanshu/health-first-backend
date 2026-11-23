@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class DoctorSummaryDto {
 	
+	private long id;
 	private String name;
 	private String gender;
 	private String image;
