@@ -44,7 +44,7 @@ public class AuthController {
 	entity.setMobileNumber(request.getMobileNumber());
 	entity.setName(request.getName());
 	entity.setRole("ROLE_USER");
-	UserEntity saveUser = userRepository.save(entity);
+	UserEntity saveUser = userRepository.save(entity); 
 	SignupResponseDto response = new SignupResponseDto();
 	response.setEmail(saveUser.getEmail());
 	response.setId(saveUser.getId());
